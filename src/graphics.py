@@ -6,13 +6,8 @@ class Assets():
     def __init__(self):
         self.sand = pygame.image.load("../assets/sand.png")
         self.water = pygame.image.load("../assets/water.png")
-        self.rects = [pygame.Rect(0, x*BLOCK, BLOCK, BLOCK) for x in range(32)]
-
-    def sand(self):
-        return self.sand
-
-    def water(self):
-        return self.water
+        self.submarine = pygame.image.load("../assets/submarine.png")
+        self.rects = [pygame.Rect(0, x*BLOCK, BLOCK, BLOCK) for x in range(6)]
 
     def get_rect(self, i):
         return self.rects[i]
@@ -39,7 +34,7 @@ class Water():
     def __init__(self, screen, assets, width):
         self.screen = screen
         self.assets = assets
-        self.lst = [[[BLOCK*(x-1), pygame.display.get_window_size()[1] - DEPTH*BLOCK + y*BLOCK ,0 if y == 0 else randint(1, 2)] for x in range(width)] for y in range(DEPTH)]
+        self.lst = [[[BLOCK*(x-1), pygame.display.get_window_size()[1] - DEPTH*BLOCK + y*BLOCK ,0 if y == 0 else 1] for x in range(width)] for y in range(DEPTH)]
 
     def update(self):
         for y in self.lst:
@@ -54,8 +49,18 @@ class Water():
             for x in y:
                 self.screen.blit(self.assets.water, (x[0], x[1]), self.assets.get_rect(x[2]))
 
-class Submarine():
-    def __init__(self):
+class Submarine(pygame.sprite.Sprite):
+    def __init__(self, screen, assets, x, y):
+        super().__init__()
+        self.screen = screen
+        self.image = assets.submarine
+        self.rect = self.image.get_rect() 
+        self.rect.center = (x, y)      
+
+    def update(self):
+        pass
+
+    def draw(self):
         pass
 
 class Mine():
@@ -72,13 +77,19 @@ class Screen():
 
         self.sand = Sand(self.screen, self.assets, self.block_size[0], self.size[1])
         self.water = Water(self.screen, self.assets, self.block_size[0])
+        self.submarine = Submarine(self.screen, self.assets, 3*BLOCK, self.size[1] - DEPTH*BLOCK/2)
+
+        self.submarine_sprite = pygame.sprite.Group()
+        self.submarine_sprite.add(self.submarine)
 
     def update(self):
         self.water.update()
+        self.submarine_sprite.update()
         self.sand.update()
 
     def draw(self):
         self.screen.fill(self.background_color)
         self.water.draw()
         self.sand.draw()
+        self.submarine_sprite.draw(self.screen)
         pygame.display.flip()
