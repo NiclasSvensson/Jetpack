@@ -23,7 +23,7 @@ def main():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     running = False
-        screen.update()
+        screen.update(input.get_frequency())
         screen.draw()
     input.stop()
 

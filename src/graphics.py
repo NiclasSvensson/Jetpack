@@ -57,11 +57,13 @@ class Submarine(pygame.sprite.Sprite):
         self.rect = self.image.get_rect() 
         self.rect.center = (x, y)      
 
-    def update(self):
-        pass
-
-    def draw(self):
-        pass
+    def update(self, frequency, bottom):
+        if frequency > 0.1:
+            self.rect.y -= (frequency / 100)
+        elif self.rect.bottom >= bottom - BLOCK + 20:
+            pass
+        else:
+            self.rect.y += 2
 
 class Mine():
     def __init__(self):
@@ -82,9 +84,9 @@ class Screen():
         self.submarine_sprite = pygame.sprite.Group()
         self.submarine_sprite.add(self.submarine)
 
-    def update(self):
+    def update(self, frequency):
         self.water.update()
-        self.submarine_sprite.update()
+        self.submarine_sprite.update(frequency, self.size[1])
         self.sand.update()
 
     def draw(self):
