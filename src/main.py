@@ -1,3 +1,4 @@
+from constants import UPDATE_FREQUENCY
 from graphics import Screen
 from input import Input
 import sys
@@ -16,7 +17,7 @@ def main():
     running = True
     while running:
         print(input.get_frequency())
-        pygame.time.Clock().tick(128)
+        pygame.time.Clock().tick(UPDATE_FREQUENCY)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False

@@ -24,11 +24,11 @@ class Input:
             fourier = np.fft.fft(signal, axis=0)
             i = np.abs(np.max(fourier[1:]))
             f = np.abs(self.coefficients[np.argmax(fourier[1:])]) if i > 40 else 0
-            self.frequency = (self.frequency + f)/2
-            #if i > 40:
-            #    self.frequency = f 
-            #else:
-            #    self.frequency = 0
+            #self.frequency = (self.frequency + f)/2
+            if i > 2:
+                self.frequency = f 
+            else:
+                self.frequency
 
     def get_frequency(self):
         return self.frequency

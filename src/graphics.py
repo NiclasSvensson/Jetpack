@@ -55,15 +55,20 @@ class Submarine(pygame.sprite.Sprite):
         self.screen = screen
         self.image = assets.submarine
         self.rect = self.image.get_rect() 
-        self.rect.center = (x, y)      
+        self.rect.center = (x, y)
+        self.v = 0
+        self.g = 15
 
     def update(self, frequency, bottom):
-        if frequency > 0.1:
-            self.rect.y -= (frequency / 100)
-        elif self.rect.bottom >= bottom - BLOCK + 20:
-            pass
+        if self.rect.bottom > bottom - BLOCK + 20:
+            self.v = 0
+            self.rect.bottom = bottom - BLOCK + 20
+        elif self.rect.top <= bottom - BLOCK * DEPTH:
+            self.v = self.v + (self.g*10)*dt
+            self.rect.y += int(self.v*dt)
         else:
-            self.rect.y += 2
+            self.v = min(50, self.v + (self.g - frequency/8)*dt)
+            self.rect.y += int(self.v*dt)
 
 class Mine():
     def __init__(self):
