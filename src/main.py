@@ -16,7 +16,7 @@ def main():
     screen = Screen()
     running = True
     while running:
-        print(input.get_frequency())
+        #print(input.get_frequency())
         pygame.time.Clock().tick(UPDATE_FREQUENCY)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

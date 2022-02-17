@@ -10,7 +10,7 @@ class Input:
         self.samplerate = None
         self.downsample = 10
         self.mapping = [c - 1 for c in self.channels]
-        self.samples = 2000
+        self.samples = 3000
         if self.samplerate is None:
             device_info = sd.query_devices(self.device, 'input')
             self.samplerate = device_info['default_samplerate']
@@ -24,7 +24,6 @@ class Input:
             fourier = np.fft.fft(signal, axis=0)
             i = np.abs(np.max(fourier[1:]))
             f = np.abs(self.coefficients[np.argmax(fourier[1:])]) if i > 40 else 0
-            #self.frequency = (self.frequency + f)/2
             if i > 2:
                 self.frequency = f 
             else:

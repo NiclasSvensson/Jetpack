@@ -7,6 +7,7 @@ class Assets():
         self.sand = pygame.image.load("../assets/sand.png")
         self.water = pygame.image.load("../assets/water.png")
         self.submarine = pygame.image.load("../assets/submarine.png")
+        self.mine = pygame.image.load("../assets/mines.png")
         self.rects = [pygame.Rect(0, x*BLOCK, BLOCK, BLOCK) for x in range(6)]
 
     def get_rect(self, i):
@@ -67,12 +68,18 @@ class Submarine(pygame.sprite.Sprite):
             self.v = self.v + (self.g*10)*dt
             self.rect.y += int(self.v*dt)
         else:
-            self.v = min(50, self.v + (self.g - frequency/8)*dt)
+            self.v = min(50, self.v + (self.g - frequency/6)*dt)
             self.rect.y += int(self.v*dt)
 
-class Mine():
-    def __init__(self):
-        pass
+class Mine(pygame.sprite.Sprite):
+    def __init__(self, assets, y):
+        super().__init__()
+        self.image = assets.mine
+        self.rect = self.image.get_rect() 
+        self.rect.center = (pygame.display.get_window_size()[0] + BLOCK, y)
+
+    def update(self):
+        self.rect.x -= 4
 
 class Screen():
     def __init__(self):
@@ -89,14 +96,23 @@ class Screen():
         self.submarine_sprite = pygame.sprite.Group()
         self.submarine_sprite.add(self.submarine)
 
+        self.mines = pygame.sprite.Group()
+        self.start_time = pygame.time.get_ticks()
+
     def update(self, frequency):
         self.water.update()
         self.submarine_sprite.update(frequency, self.size[1])
+        self.mines.update()
         self.sand.update()
+        if pygame.time.get_ticks() - self.start_time > BOMB_FREQUENCY:
+            self.start_time = pygame.time.get_ticks()
+            self.mines.add(Mine(self.assets, randint(self.size[1] - BLOCK*DEPTH + BLOCK, self.size[1] - BLOCK)))
+            #print("BOMB")
 
     def draw(self):
         self.screen.fill(self.background_color)
         self.water.draw()
         self.sand.draw()
+        self.mines.draw(self.screen)
         self.submarine_sprite.draw(self.screen)
         pygame.display.flip()
