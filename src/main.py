@@ -14,6 +14,8 @@ def main():
     input_thread.start()
 
     screen = Screen()
+    icon = pygame.image.load("../assets/mines.png")
+    pygame.display.set_icon(icon)
     running = True
     while running:
         #print(input.get_frequency())

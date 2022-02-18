@@ -3,6 +3,7 @@ import sounddevice as sd
 
 class Input:
     def __init__(self):
+        self.thread_done = False
         self.done = False
         self.frequency = 0
         self.channels = [1]
@@ -28,9 +29,12 @@ class Input:
                 self.frequency = f 
             else:
                 self.frequency
+        self.thread_done = True
 
     def get_frequency(self):
         return self.frequency
     
     def stop(self):
         self.done = True
+        while not self.thread_done:
+            pass

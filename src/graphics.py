@@ -8,6 +8,7 @@ class Assets():
         self.water = pygame.image.load("../assets/water.png")
         self.submarine = pygame.image.load("../assets/submarine.png")
         self.mine = pygame.image.load("../assets/mines.png")
+        self.explosion = pygame.image.load("../assets/explosion.png")
         self.rects = [pygame.Rect(0, x*BLOCK, BLOCK, BLOCK) for x in range(6)]
 
     def get_rect(self, i):
@@ -72,13 +73,17 @@ class Submarine(pygame.sprite.Sprite):
             self.rect.y += int(self.v*dt)
 
 class Mine(pygame.sprite.Sprite):
-    def __init__(self, assets, y):
+    def __init__(self, screen, assets, y):
         super().__init__()
+        self.screen = screen
         self.image = assets.mine
+        self.assets = assets
         self.rect = self.image.get_rect() 
         self.rect.center = (pygame.display.get_window_size()[0] + BLOCK, y)
 
     def update(self):
+        if self.rect.x < -BLOCK:
+            self.kill()
         self.rect.x -= 4
 
 class Screen():
@@ -104,10 +109,12 @@ class Screen():
         self.submarine_sprite.update(frequency, self.size[1])
         self.mines.update()
         self.sand.update()
+        hit_bomb = pygame.sprite.spritecollide(self.submarine, self.mines, True)
+        if hit_bomb:
+            print(hit_bomb[0].rect.y)
         if pygame.time.get_ticks() - self.start_time > BOMB_FREQUENCY:
             self.start_time = pygame.time.get_ticks()
-            self.mines.add(Mine(self.assets, randint(self.size[1] - BLOCK*DEPTH + BLOCK, self.size[1] - BLOCK)))
-            #print("BOMB")
+            self.mines.add(Mine(self.screen, self.assets, randint(self.size[1] - BLOCK*DEPTH + BLOCK, self.size[1] - BLOCK)))
 
     def draw(self):
         self.screen.fill(self.background_color)
