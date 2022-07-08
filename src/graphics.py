@@ -127,6 +127,7 @@ class Screen():
         self.explosions = pygame.sprite.Group()
 
     def update(self, frequency):
+        self.frequency = frequency
         self.water.update()
         self.submarine_sprite.update(frequency, self.size[1])
         self.mines.update()
@@ -146,4 +147,11 @@ class Screen():
         self.mines.draw(self.screen)
         self.submarine_sprite.draw(self.screen)
         self.explosions.draw(self.screen)
+
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        text = font.render("Frequency: " + "{:>10}".format("{:.4f}".format(self.frequency)), True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.x, text_rect.y = 0, 0
+        self.screen.blit(text, text_rect)
+
         pygame.display.flip()
