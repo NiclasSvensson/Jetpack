@@ -5,6 +5,7 @@ A Jetpack Joyride like game developed in Python, using the Pygame library for GU
 Developed on python 3.8.10. Create a python-venv, activate it and perform the following steps:
 
 ```
+sudo apt-get install libportaudio2
 git clone git@github.com:NiclasSvensson/SonarSubmarine.git
 cd SonarSubmarine
 pip3 install -r requirements.txt
